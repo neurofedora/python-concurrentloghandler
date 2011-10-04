@@ -1,0 +1,17 @@
+--- setup.py
++++ setup.py
+@@ -220,13 +220,7 @@
+         "portalocker",
+         ],
+       package_dir={ '' : 'src', },
+-      data_files=[
+-        ('tests', ["stresstest.py"]),
+-        ('docs', [
+-            'README',
+-            'LICENSE',
+-            ]),
+-      ],
++      data_files=[ ],
+       url="http://pypi.python.org/pypi/ConcurrentLogHandler",
+       license = "http://www.apache.org/licenses/LICENSE-2.0",
+       description=doc.pop(0),
