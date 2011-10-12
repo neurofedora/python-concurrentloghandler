@@ -2,14 +2,15 @@
 
 Name:           python-concurrentloghandler
 Version:        0.8.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Concurrent logging handler (drop-in replacement for RotatingFileHandler)
 
 Group:          Development/Languages
 License:        ASL 2.0
 URL:            http://pypi.python.org/pypi/ConcurrentLogHandler/
 Source0:        http://pypi.python.org/packages/source/C/%{modname}/%{modname}-%{version}.tar.gz
-Patch0:         %modname-0.8.4-testpath.patch
+# Upstream's setup.py tries to install tests and doc into /usr which is not what we want
+Patch0:         %{modname}-0.8.4-testpath.patch
 
 BuildArch:      noarch
 BuildRequires:  python-devel
@@ -42,6 +43,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Oct 13 2011 Dan Callaghan <dcallagh@redhat.com> - 0.8.4-4
+- add a comment about why testpath.patch is needed
+
 * Wed Oct 12 2011 Dan Callaghan <dcallagh@redhat.com> - 0.8.4-3
 - clean up spec a little more
 - drop version from setuptools dependency as it is not needed
