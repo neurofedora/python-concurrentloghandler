@@ -2,7 +2,7 @@
 
 Name:           python-concurrentloghandler
 Version:        0.8.4
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Concurrent logging handler (drop-in replacement for RotatingFileHandler)
 
 Group:          Development/Languages
@@ -11,6 +11,8 @@ URL:            http://pypi.python.org/pypi/ConcurrentLogHandler/
 Source0:        http://pypi.python.org/packages/source/C/%{modname}/%{modname}-%{version}.tar.gz
 # Upstream's setup.py tries to install tests and doc into /usr which is not what we want
 Patch0:         %{modname}-0.8.4-testpath.patch
+# RHBZ#858912: dont't flush log file if already closed
+Patch1:         %{modname}-0.8.4-flush-closed.patch
 
 BuildArch:      noarch
 BuildRequires:  python-devel
@@ -26,6 +28,7 @@ write to the same log file concurrently.
 %prep
 %setup -q -n %{modname}-%{version}
 %patch0
+%patch1 -p1
 
 
 %build
@@ -43,6 +46,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 20 2012 Dan Callaghan <dcallagh@redhat.com> - 0.8.4-7
+- RHBZ#858912: dont't flush log file if already closed
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.4-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
