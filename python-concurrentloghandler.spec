@@ -2,7 +2,7 @@
 
 Name:           python-concurrentloghandler
 Version:        0.8.4
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Concurrent logging handler (drop-in replacement for RotatingFileHandler)
 
 Group:          Development/Languages
@@ -46,6 +46,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.4-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Wed Sep 20 2012 Dan Callaghan <dcallagh@redhat.com> - 0.8.4-7
 - RHBZ#858912: dont't flush log file if already closed
 
