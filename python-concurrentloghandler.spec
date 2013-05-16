@@ -11,8 +11,12 @@ URL:            http://pypi.python.org/pypi/ConcurrentLogHandler/
 Source0:        http://pypi.python.org/packages/source/C/%{modname}/%{modname}-%{version}.tar.gz
 # Upstream's setup.py tries to install tests and doc into /usr which is not what we want
 Patch0:         %{modname}-0.8.4-testpath.patch
-# RHBZ#858912: dont't flush log file if already closed
+# RHBZ#858912: don't flush log file if already closed
 Patch1:         %{modname}-0.8.4-flush-closed.patch
+# RHBZ#952929: ensure stream lock is closed
+Patch2:         %{modname}-0.8.4-close-stream-lock.patch
+# RHBZ#858922: suppress exceptions in release
+Patch3:         %{modname}-0.8.4-exceptions-in-release.patch
 
 BuildArch:      noarch
 BuildRequires:  python-devel
@@ -29,6 +33,8 @@ write to the same log file concurrently.
 %setup -q -n %{modname}-%{version}
 %patch0
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 
 %build
@@ -46,6 +52,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 16 2013 Dan Callaghan <dcallagh@redhat.com> - 0.8.4-9
+- RHBZ#952929: ensure stream lock is closed
+- RHBZ#858922: suppress exceptions in release
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.4-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
