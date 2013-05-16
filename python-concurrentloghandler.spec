@@ -2,7 +2,7 @@
 
 Name:           python-concurrentloghandler
 Version:        0.8.4
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Concurrent logging handler (drop-in replacement for RotatingFileHandler)
 
 Group:          Development/Languages
