@@ -2,7 +2,7 @@
 
 Name:           python-concurrentloghandler
 Version:        0.8.4
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Concurrent logging handler (drop-in replacement for RotatingFileHandler)
 
 Group:          Development/Languages
@@ -17,6 +17,8 @@ Patch1:         %{modname}-0.8.4-flush-closed.patch
 Patch2:         %{modname}-0.8.4-close-stream-lock.patch
 # RHBZ#858922: suppress exceptions in release
 Patch3:         %{modname}-0.8.4-exceptions-in-release.patch
+# RHBZ#905286: don't release stream lock if already closed
+Patch4:         %{modname}-0.8.4-release-after-close.patch
 
 BuildArch:      noarch
 BuildRequires:  python-devel
@@ -35,6 +37,7 @@ write to the same log file concurrently.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 
 %build
@@ -52,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jun 26 2013 Dan Callaghan <dcallagh@redhat.com> - 0.8.4-10
+- RHBZ#905286: don't release stream lock if already closed
+
 * Thu May 16 2013 Dan Callaghan <dcallagh@redhat.com> - 0.8.4-9
 - RHBZ#952929: ensure stream lock is closed
 - RHBZ#858922: suppress exceptions in release
