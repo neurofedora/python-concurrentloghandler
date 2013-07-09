@@ -1,8 +1,8 @@
 %global modname ConcurrentLogHandler
 
 Name:           python-concurrentloghandler
-Version:        0.8.4
-Release:        10%{?dist}
+Version:        0.8.6
+Release:        1%{?dist}
 Summary:        Concurrent logging handler (drop-in replacement for RotatingFileHandler)
 
 Group:          Development/Languages
@@ -10,15 +10,13 @@ License:        ASL 2.0
 URL:            http://pypi.python.org/pypi/ConcurrentLogHandler/
 Source0:        http://pypi.python.org/packages/source/C/%{modname}/%{modname}-%{version}.tar.gz
 # Upstream's setup.py tries to install tests and doc into /usr which is not what we want
-Patch0:         %{modname}-0.8.4-testpath.patch
-# RHBZ#858912: don't flush log file if already closed
-Patch1:         %{modname}-0.8.4-flush-closed.patch
+Patch0:         %{modname}-0.8.6-testpath.patch
 # RHBZ#952929: ensure stream lock is closed
-Patch2:         %{modname}-0.8.4-close-stream-lock.patch
+Patch1:         0001-ensure-stream-lock-is-closed.patch
 # RHBZ#858922: suppress exceptions in release
-Patch3:         %{modname}-0.8.4-exceptions-in-release.patch
+Patch2:         0002-suppress-exceptions-in-.release.patch
 # RHBZ#905286: don't release stream lock if already closed
-Patch4:         %{modname}-0.8.4-release-after-close.patch
+Patch3:         0003-don-t-release-stream-lock-if-already-closed.patch
 
 BuildArch:      noarch
 BuildRequires:  python-devel
@@ -33,11 +31,10 @@ write to the same log file concurrently.
 
 %prep
 %setup -q -n %{modname}-%{version}
-%patch0
+%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
 
 
 %build
@@ -55,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 09 2013 Dan Callaghan <dcallagh@redhat.com> - 0.8.6-1
+- upstream bug fix release 0.8.6
+
 * Wed Jun 26 2013 Dan Callaghan <dcallagh@redhat.com> - 0.8.4-10
 - RHBZ#905286: don't release stream lock if already closed
 

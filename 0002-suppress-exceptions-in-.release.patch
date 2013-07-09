@@ -1,0 +1,22 @@
+From 9f5c5bdcff3093e35aa934c2071e1a31636ef67e Mon Sep 17 00:00:00 2001
+From: Dan Callaghan <dcallagh@redhat.com>
+Date: Thu, 16 May 2013 17:11:05 +1000
+Subject: [PATCH 2/3] suppress exceptions in .release()
+
+
+diff --git a/src/cloghandler.py b/src/cloghandler.py
+index c4a7a3f..6a09c7d 100644
+--- a/src/cloghandler.py
++++ b/src/cloghandler.py
+@@ -195,6 +195,8 @@ class ConcurrentRotatingFileHandler(BaseRotatingHandler):
+                 self.stream.flush()
+                 if self._rotateFailed:
+                     self.stream.close()
++        except Exception:
++            self.handleError(None)
+         finally:
+             try:
+                 unlock(self.stream_lock)
+-- 
+1.8.1.4
+
