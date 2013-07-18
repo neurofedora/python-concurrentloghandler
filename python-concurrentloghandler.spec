@@ -1,7 +1,7 @@
 %global modname ConcurrentLogHandler
 
 Name:           python-concurrentloghandler
-Version:        0.8.6
+Version:        0.8.7
 Release:        1%{?dist}
 Summary:        Concurrent logging handler (drop-in replacement for RotatingFileHandler)
 
@@ -11,12 +11,6 @@ URL:            http://pypi.python.org/pypi/ConcurrentLogHandler/
 Source0:        http://pypi.python.org/packages/source/C/%{modname}/%{modname}-%{version}.tar.gz
 # Upstream's setup.py tries to install tests and doc into /usr which is not what we want
 Patch0:         %{modname}-0.8.6-testpath.patch
-# RHBZ#952929: ensure stream lock is closed
-Patch1:         0001-ensure-stream-lock-is-closed.patch
-# RHBZ#858922: suppress exceptions in release
-Patch2:         0002-suppress-exceptions-in-.release.patch
-# RHBZ#905286: don't release stream lock if already closed
-Patch3:         0003-don-t-release-stream-lock-if-already-closed.patch
 
 BuildArch:      noarch
 BuildRequires:  python-devel
@@ -32,9 +26,6 @@ write to the same log file concurrently.
 %prep
 %setup -q -n %{modname}-%{version}
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
 
 
 %build
@@ -52,6 +43,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 18 2013 Dan Callaghan <dcallagh@redhat.com> - 0.8.7-1
+- upstream bug fix release 0.8.7
+
 * Tue Jul 09 2013 Dan Callaghan <dcallagh@redhat.com> - 0.8.6-1
 - upstream bug fix release 0.8.6
 
