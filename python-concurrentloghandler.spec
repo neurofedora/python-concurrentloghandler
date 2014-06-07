@@ -2,7 +2,7 @@
 
 Name:           python-concurrentloghandler
 Version:        0.8.7
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Concurrent logging handler (drop-in replacement for RotatingFileHandler)
 
 Group:          Development/Languages
@@ -43,6 +43,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.7-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.7-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
