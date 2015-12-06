@@ -1,11 +1,12 @@
 %global modname ConcurrentLogHandler
+%global srcname concurrentloghandler
+%global altname concurrent-log-handler
 
-Name:           python-concurrentloghandler
-Version:        0.8.7
-Release:        4%{?dist}
+Name:           python-%{srcname}
+Version:        0.9.1
+Release:        1%{?dist}
 Summary:        Concurrent logging handler (drop-in replacement for RotatingFileHandler)
 
-Group:          Development/Languages
 License:        ASL 2.0
 URL:            http://pypi.python.org/pypi/ConcurrentLogHandler/
 Source0:        http://pypi.python.org/packages/source/C/%{modname}/%{modname}-%{version}.tar.gz
@@ -13,8 +14,6 @@ Source0:        http://pypi.python.org/packages/source/C/%{modname}/%{modname}-%
 Patch0:         %{modname}-0.8.6-testpath.patch
 
 BuildArch:      noarch
-BuildRequires:  python-devel
-BuildRequires:  python-setuptools
 
 %description
 This module provides an additional log handler for Python's standard logging
@@ -22,27 +21,105 @@ package (PEP 282). This handler will write log events to log file which is
 rotated when the log file reaches a certain size. Multiple processes can safely
 write to the same log file concurrently.
 
+%package -n python2-%{srcname}
+Summary:        %{summary}
+%{?python_provide:%python_provide python2-%{modname}}
+%{?python_provide:%python_provide python2-%{srcname}}
+%{?python_provide:%python_provide python2-%{altname}}
+BuildRequires:  python2-devel python2-setuptools
+BuildRequires:  python2-portalocker
+Requires:       python2-portalocker
+
+%description -n python2-%{srcname}
+This module provides an additional log handler for Python's standard logging
+package (PEP 282). This handler will write log events to log file which is
+rotated when the log file reaches a certain size. Multiple processes can safely
+write to the same log file concurrently.
+
+Python 2 version.
+
+%package -n python3-%{srcname}
+Summary:        %{summary}
+%{?python_provide:%python_provide python3-%{modname}}
+%{?python_provide:%python_provide python3-%{srcname}}
+%{?python_provide:%python_provide python3-%{altname}}
+BuildRequires:  /usr/bin/2to3
+BuildRequires:  python3-devel python3-setuptools
+BuildRequires:  python3-portalocker
+Requires:       python3-portalocker
+
+%description -n python3-%{srcname}
+This module provides an additional log handler for Python's standard logging
+package (PEP 282). This handler will write log events to log file which is
+rotated when the log file reaches a certain size. Multiple processes can safely
+write to the same log file concurrently.
+
+Python 3 version.
 
 %prep
-%setup -q -n %{modname}-%{version}
-%patch0 -p1
+%setup -qc
+mv %{modname}-%{version} python2
 
+pushd python2
+%patch0 -p1
+# Drop bundled portalocker
+rm -rf src/portalocker.py
+# Drop bundled egg
+rm -rf src/*.egg-info
+popd
+
+cp -a python2 python3
+2to3 --write --nobackups python3
 
 %build
-%{__python} setup.py build
+pushd python2
+  %py2_build
+popd
 
+pushd python3
+  %py3_build
+popd
 
 %install
-rm -rf $RPM_BUILD_ROOT
-%{__python} setup.py install -O1 --skip-build --root=$RPM_BUILD_ROOT
+pushd python2
+  %py2_install
+popd
 
+pushd python3
+  %py3_install
+popd
 
-%files
-%doc README LICENSE
-%{python_sitelib}/*
+%check
+pushd python2
+  PYTHONPATH=%{buildroot}%{python2_sitelib} %{__python2} stresstest.py
+popd
 
+pushd python3
+  PYTHONPATH=%{buildroot}%{python3_sitelib} %{__python3} stresstest.py
+popd
+
+%files -n python2-%{srcname}
+%license python2/LICENSE
+%doc python2/README
+%{python2_sitelib}/%{modname}-*.egg-info
+%{python2_sitelib}/cloghandler.py*
+
+%files -n python3-%{srcname}
+%license python3/LICENSE
+%doc python3/README
+%{python3_sitelib}/%{modname}-*.egg-info
+%{python3_sitelib}/cloghandler.py
+%{python3_sitelib}/__pycache__/cloghandler.*
 
 %changelog
+* Sun Dec 06 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.9.1-1
+- Update to 0.9.1
+- Add python3 subpackage
+- Follow new packaging guidelines
+- Run tests
+- Unbundle portalocker
+- Drop egg
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.7-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
@@ -68,7 +145,7 @@ rm -rf $RPM_BUILD_ROOT
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.4-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
-* Wed Sep 20 2012 Dan Callaghan <dcallagh@redhat.com> - 0.8.4-7
+* Thu Sep 20 2012 Dan Callaghan <dcallagh@redhat.com> - 0.8.4-7
 - RHBZ#858912: dont't flush log file if already closed
 
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.4-6
